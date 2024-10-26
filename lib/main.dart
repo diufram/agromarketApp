@@ -1,5 +1,9 @@
+import 'package:agromarket_app/data/datasource/auth_repository_impl.dart';
+import 'package:agromarket_app/data/datasource/local_repository_impl.dart';
+import 'package:agromarket_app/domain/repository/auth_repository_intr.dart';
+import 'package:agromarket_app/domain/repository/local_repository_intr.dart';
 import 'package:agromarket_app/services/globals.dart';
-import 'package:agromarket_app/ui/productor/produccion/produccion_screen_create.dart';
+import 'package:agromarket_app/ui/screens/productor/produccion/produccion_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,13 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-/*         Provider<AuthRepositoryInterface>(
+        Provider<AuthRepositoryInterface>(
           create: (_) => AuthRepositoryImpl(),
         ),
         Provider<LocalRepositoryInterface>(
           create: (_) => LocalRepositoryImpl(),
         ),
-        Provider<QuoteRepositoryInterface>(
+        /*        Provider<QuoteRepositoryInterface>(
           create: (_) => QuoteRepositoryImpl(),
         ),
         Provider<CompanyRepositoryInterface>(
@@ -54,15 +58,14 @@ class MyApp extends StatelessWidget {
         return ScreenUtilInit(
           designSize: const Size(360, 900),
           minTextAdapt: true,
-          //splitScreenMode: true,
-          // Use builder only if you need to use library outside ScreenUtilInit context
           builder: (_, __) {
             return MaterialApp(
-                builder: FToastBuilder(),
-                title: 'QUOTE',
-                theme: poppins,
-                debugShowCheckedModeBanner: false,
-                home: ProduccionScreenCreate());
+              builder: FToastBuilder(),
+              title: 'QUOTE',
+              theme: poppins,
+              debugShowCheckedModeBanner: false,
+              home: ProduccionScreen(),
+            );
           },
         );
       }),
