@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 //const String baseURL = "http://137.184.196.1/";
 
-const String baseURL = "http://192.168.0.10:8000/";
+const String baseURL = "http://192.168.0.2:8080/api";
 
 const backgroundPrimary = Color(0XFF2B5F53);
 

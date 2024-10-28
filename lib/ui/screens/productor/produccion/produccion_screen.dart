@@ -1,15 +1,44 @@
+import 'package:agromarket_app/domain/request/produccion_request.dart';
 import 'package:agromarket_app/services/globals.dart';
-import 'package:agromarket_app/ui/screens/productor/produccion/produccion_screen_create.dart';
 import 'package:agromarket_app/ui/screens/widget/custom_card.dart';
 import 'package:agromarket_app/ui/screens/widget/custom_dropdownmenu.dart';
 import 'package:agromarket_app/ui/screens/widget/custom_textfield.dart';
 import 'package:agromarket_app/ui/screens/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
 
 class ProduccionScreen extends StatelessWidget {
   ProduccionScreen({super.key});
   final TextEditingController controller = TextEditingController();
+  Stream<List<Produccion>> get produccionStream async* {
+    while (true) {
+      final response = await http.get(Uri.parse('$baseURL/produccions'));
+
+      if (response.statusCode == 200) {
+        // Parsear el JSON y convertirlo en List<Produccion>
+        List<Produccion> producciones = produccionFromJson(response.body);
+        yield producciones;
+      } else {
+        throw Exception('Error al cargar producciones');
+      }
+    }
+  }
+
+  Stream<List<Produccion>> get getAllProduccionCreate async* {
+    while (true) {
+      final response = await http.get(Uri.parse('$baseURL/produccions'));
+
+      if (response.statusCode == 200) {
+        // Parsear el JSON y convertirlo en List<Produccion>
+        List<Produccion> producciones = produccionFromJson(response.body);
+        yield producciones;
+      } else {
+        throw Exception('Error al cargar producciones');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +54,36 @@ class ProduccionScreen extends StatelessWidget {
         body: SafeArea(
           child: Stack(
             children: [
-              Column(
-                children: [
-                  CustomCard(
-                    color: backgroundOptional1,
-                    height: 120.sp,
-                    child: const Detail(),
-                  )
-                ],
+              Center(
+                child: StreamBuilder<List<Produccion>>(
+                  stream: produccionStream, // Cambia a tu stream actualizado
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Produccion>> snapshot) {
+                    // Mostrar un indicador de carga mientras se obtienen datos
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (!snapshot.hasData) {
+                      return const Text("No se encontraron datos");
+                    } else {
+                      // Mostrar la lista de producciones obtenida
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final produccion = snapshot.data![index];
+                          return CustomCard(
+                            color: backgroundOptional1,
+                            height: 120.sp,
+                            child: Detail(
+                              produccion: produccion,
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
               Positioned(
                 right: 15.sp,
@@ -53,7 +104,18 @@ class ButtonAdd extends StatelessWidget {
     required this.height,
   });
   final double height;
-  final TextEditingController controller = TextEditingController();
+
+  TextEditingController controller = TextEditingController();
+  List<Producto> list = [
+    Producto(id: 1, nombre: "papa"),
+    Producto(id: 2, nombre: "azzoz"),
+  ];
+
+  String selectedValue = '';
+
+  void handleSelection(String value) {
+    selectedValue = value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +136,7 @@ class ButtonAdd extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Text('Selected Value: $selectedValue'),
                     Text(
                       "Crear Produccion",
                       style: Theme.of(context)
@@ -90,7 +153,7 @@ class ButtonAdd extends StatelessWidget {
                           textController: controller,
                           isObscureText: false,
                           hintText: "Area",
-                          type: TextInputType.text,
+                          type: TextInputType.number,
                         ),
                         CustomTextField(
                             width: MediaQuery.sizeOf(context).width * 0.48,
@@ -98,7 +161,7 @@ class ButtonAdd extends StatelessWidget {
                             textController: controller,
                             isObscureText: false,
                             hintText: "Cantidad ",
-                            type: TextInputType.text)
+                            type: TextInputType.number)
                       ],
                     ),
                     Row(
@@ -110,6 +173,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Propiedad',
                           uk: UniqueKey(),
+                          list: list,
+                          onSelected: handleSelection,
                         ),
                         CustomDropDownMenu(
                           textController: controller,
@@ -117,6 +182,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Producto',
                           uk: UniqueKey(),
+                          list: list,
+                          onSelected: handleSelection,
                         )
                       ],
                     ),
@@ -129,6 +196,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Unidad Medida',
                           uk: UniqueKey(),
+                          list: list,
+                          onSelected: handleSelection,
                         ),
                         CustomDropDownMenu(
                           textController: controller,
@@ -136,6 +205,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Temporada',
                           uk: UniqueKey(),
+                          onSelected: handleSelection,
+                          list: list,
                         )
                       ],
                     ),
@@ -148,6 +219,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Fecha Siembra',
                           uk: UniqueKey(),
+                          onSelected: handleSelection,
+                          list: list,
                         ),
                         CustomDropDownMenu(
                           textController: controller,
@@ -155,6 +228,8 @@ class ButtonAdd extends StatelessWidget {
                           height: 50.h,
                           label: 'Fecha Cosecha',
                           uk: UniqueKey(),
+                          onSelected: handleSelection,
+                          list: list,
                         )
                       ],
                     ),
@@ -190,15 +265,16 @@ class ButtonAdd extends StatelessWidget {
 class Detail extends StatelessWidget {
   const Detail({
     super.key,
+    required this.produccion,
   });
-
+  final Produccion produccion;
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Piña",
+        Text(produccion.producto.nombre,
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
@@ -211,7 +287,7 @@ class Detail extends StatelessWidget {
                     .textTheme
                     .bodyMedium!
                     .copyWith(fontWeight: FontWeight.bold)),
-            Text("Rancho San Simon",
+            Text(produccion.propiedad.descripcion,
                 style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
@@ -223,7 +299,8 @@ class Detail extends StatelessWidget {
                     .textTheme
                     .bodyMedium!
                     .copyWith(fontWeight: FontWeight.bold)),
-            Text("10 t", style: Theme.of(context).textTheme.bodyMedium),
+            Text(produccion.cantidad.toString() + produccion.uniMedida.nombre,
+                style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
         Row(
@@ -234,7 +311,8 @@ class Detail extends StatelessWidget {
                     .textTheme
                     .bodyMedium!
                     .copyWith(fontWeight: FontWeight.bold)),
-            Text("2024-07-04", style: Theme.of(context).textTheme.bodyMedium),
+            Text(produccion.fechaCosecha.toString().split(" ")[0],
+                style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ],

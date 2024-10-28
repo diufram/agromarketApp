@@ -9,21 +9,24 @@ class CustomDropDownMenu extends StatefulWidget {
     required this.height,
     required this.label,
     required this.uk,
+    required this.list,
+    required this.onSelected,
   });
 
   final TextEditingController textController;
   final double width;
   final double height;
   final String label;
+  final List<dynamic> list;
   final Key uk;
+  final ValueChanged<String> onSelected;
 
   @override
   State<CustomDropDownMenu> createState() => _CustomDropDownMenuState();
 }
 
 class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
-  final List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-  late String dropdownValue = list.first;
+  dynamic dropdownValue;
   late final Key dropdownKey;
   @override
   void initState() {
@@ -36,9 +39,11 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
     return SizedBox(
       width: widget.width,
       height: widget.height,
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<dynamic>(
         key: dropdownKey,
+        style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(8.sp),
           labelText: widget.label,
           labelStyle: Theme.of(context).textTheme.bodyMedium,
           enabledBorder: OutlineInputBorder(
@@ -50,24 +55,27 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.sp),
-            borderSide: const BorderSide(
-              color: Colors.orange,
+            borderSide: BorderSide(
+              width: 2.sp,
+              color: Colors.green,
               style: BorderStyle.solid,
             ),
           ),
         ),
-        style: Theme.of(context).textTheme.bodyMedium,
         icon: const Icon(Icons.arrow_drop_down),
-        onChanged: (String? newValue) {
+        onChanged: (dynamic newValue) {
           setState(() {
             dropdownValue = newValue!;
-            print(newValue);
           });
+          widget.onSelected(newValue.id.toString());
         },
-        items: list.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
+        items: widget.list.map<DropdownMenuItem<dynamic>>((dynamic value) {
+          return DropdownMenuItem<dynamic>(
             value: value,
-            child: Text(value),
+            child: Text(
+              value.nombre,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           );
         }).toList(),
       ),
