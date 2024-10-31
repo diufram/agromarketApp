@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //const String baseURL = "http://137.184.196.1/";
-
-const String baseURL = "http://192.168.0.2:8080/api";
+const String ip = "172.20.10.10";
+const String baseURL = "http://$ip:8080/api";
 
 const backgroundPrimary = Color(0XFF2B5F53);
 
@@ -14,6 +14,12 @@ const backgroundSecondary = Color.fromARGB(255, 55, 134, 132);
 const backgroundOptional = Color.fromARGB(255, 205, 203, 203);
 const backgroundOptional1 = Color(0xFF3A8171);
 ThemeData poppins = ThemeData(
+  primarySwatch: Colors.teal, // Color principal de la aplicación
+  colorScheme: const ColorScheme.light(
+    primary: backgroundPrimary, // Color principal (encabezado y selección)
+    onPrimary: Colors.white, // Color del texto en el encabezado
+    onSurface: Colors.black, // Color del texto en el calendario
+  ),
   useMaterial3: true,
   textTheme: TextTheme(
     displayLarge: GoogleFonts.poppins(

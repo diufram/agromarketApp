@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:agromarket_app/domain/request/produccion_request.dart';
+import 'package:agromarket_app/domain/response/produccion_response.dart';
 
 Persona personaFromJson(String str) => Persona.fromJson(json.decode(str));
 

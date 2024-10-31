@@ -11,7 +11,10 @@ class CustomTextField extends StatelessWidget {
     this.validate,
     this.labelText,
     required this.width,
-    required this.height, // Agregamos labelText como parámetro opcional
+    this.height,
+    this.maxLines,
+    this.readOnly,
+    this.onTap,
   });
 
   final TextEditingController textController;
@@ -21,7 +24,10 @@ class CustomTextField extends StatelessWidget {
   final String? labelText; // Definimos labelText como String opcional
   final Function(String?)? validate;
   final double width;
-  final double height;
+  final double? height;
+  final int? maxLines;
+  final bool? readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +35,12 @@ class CustomTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextFormField(
+        onTap: onTap,
+        readOnly: readOnly ?? false,
+        maxLines: maxLines,
         keyboardType: type,
         style: Theme.of(context).textTheme.bodyMedium,
+        
         controller: textController,
         obscureText: isObscureText,
         decoration: InputDecoration(

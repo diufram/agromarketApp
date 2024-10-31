@@ -3,6 +3,8 @@ import 'package:agromarket_app/data/datasource/local_repository_impl.dart';
 import 'package:agromarket_app/domain/repository/auth_repository_intr.dart';
 import 'package:agromarket_app/domain/repository/local_repository_intr.dart';
 import 'package:agromarket_app/services/globals.dart';
+import 'package:agromarket_app/ui/screens/productor/home/home_screnn.dart';
+import 'package:agromarket_app/ui/screens/productor/oferta/oferta_screen.dart';
 import 'package:agromarket_app/ui/screens/productor/produccion/produccion_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,7 +66,7 @@ class MyApp extends StatelessWidget {
               title: 'QUOTE',
               theme: poppins,
               debugShowCheckedModeBanner: false,
-              home: ProduccionScreen(),
+              home: HomeScreen(),
             );
           },
         );
