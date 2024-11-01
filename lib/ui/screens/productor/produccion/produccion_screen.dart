@@ -75,6 +75,14 @@ class _ProduccionScreenState extends State<ProduccionScreen> {
                   .copyWith(color: Colors.white)),
           centerTitle: true,
           backgroundColor: backgroundPrimary,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+              )),
         ),
         body: SafeArea(
           child: Stack(
@@ -267,6 +275,12 @@ class _ButtonAddState extends State<ButtonAdd> {
     }
   }
 
+  void clearAll() {
+    fechaCosechaController.clear();
+    fechaSiembraController.clear();
+    cantidadController.clear();
+  }
+
   Future<void> createProduccion() async {
     ProduccionRequest request = ProduccionRequest(
         cantidad: double.parse(cantidadController.text),
@@ -282,6 +296,8 @@ class _ButtonAddState extends State<ButtonAdd> {
           'Content-Type': 'application/json',
         },
         body: jsonEncode(request.toJson()));
+
+    clearAll();
   }
 
   @override

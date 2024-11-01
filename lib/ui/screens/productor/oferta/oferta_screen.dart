@@ -77,6 +77,7 @@ class _ProduccionScreenState extends State<OfertaScreen> {
 
     descripcionPController.clear();
     fechaExpPController.clear();
+    ofertaDetalles.clear();
   }
 
   Future<void> _selectDateFechaExpP(BuildContext context) async {
@@ -111,6 +112,14 @@ class _ProduccionScreenState extends State<OfertaScreen> {
                   .copyWith(color: Colors.white)),
           centerTitle: true,
           backgroundColor: backgroundPrimary,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+              )),
           actions: <Widget>[
             IconButton(
                 onPressed: () {
