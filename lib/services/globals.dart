@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //const String baseURL = "http://137.184.196.1/";
-const String ip = "172.20.10.10";
+const String ip = "192.168.0.196";
 const String baseURL = "http://$ip:8080/api";
 
 const backgroundPrimary = Color(0XFF2B5F53);
